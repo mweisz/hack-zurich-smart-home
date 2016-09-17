@@ -8,12 +8,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/css3clock.css" />
     </head>
     <body>
 
@@ -24,6 +25,12 @@
             <div class="overlay-box vertical-door-closed" id="door-3"></div>
             <div class="overlay-box horizontal-door-closed" id="door-4"></div>
             <div class="overlay-box horizontal-door-closed" id="door-5"></div>
+
+            <!-- LIGHTBULBS -->
+            <div class="lightbulb lightbulb-off" id="lightbulb-1"></div>
+            <div class="lightbulb lightbulb-off" id="lightbulb-2"></div>
+            <div class="lightbulb lightbulb-off" id="lightbulb-3"></div>
+            <div class="lightbulb lightbulb-off" id="lightbulb-4"></div>
         </div>
 
 
@@ -32,7 +39,46 @@
 
         <!-- Controls -->
         <div class="footer-container">
-            <input type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-play'></i> Play" data-off="<i class='fa fa-pause'></i> Pause" onchange="toggleSimulation()">
+            <div class="panel panel-default">
+                <div class="panel-heading">Simulation</div>
+                <div class="panel-body"> 
+                    <div class="row">
+                        <div class="col-xs-12 col-md-4">
+                            <div class="list-group event-log">
+                                <a href="#" class="list-group-item list-group-item">17.09.2016 - <b>Door opened.</b></a>
+                                <a href="#" class="list-group-item list-group-item">17.09.2016 - <b>Door closed.</b></a>
+                                <a href="#" class="list-group-item list-group-item-danger">17.09.2016 - <b>Anomalous Door Behaviour</b></a>
+                            </div>
+
+
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                        </div>
+                        <div class="col-xs-4 col-md-2" style="text-align: center;">
+                            <div id="liveclock" class="outer_face" style="margin-left:40px;">
+                                <div class="marker oneseven"></div>
+                                <div class="marker twoeight"></div>
+                                <div class="marker fourten"></div>
+                                <div class="marker fiveeleven"></div>
+
+                                <div class="inner_face">
+                                <div class="hand hour"></div>
+                                <div class="hand minute"></div>
+                                <!-- <div class="hand second"></div> -->
+                                </div>
+                            </div>
+                            <div style="margin-top:15px;"">
+                                <input type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-play'></i> Play" data-off="<i class='fa fa-pause'></i> Pause" onchange="toggleSimulation()">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+               </div>
+            </div>
+
+
+
         </div>
 
 
@@ -41,6 +87,8 @@
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
 
+        <script src="js/state_timeline.json"></script>
+        <script src="js/clock.js"></script>
         <script src="js/main.js"></script>
     </body>
 </html>
