@@ -14,8 +14,9 @@
 }
 
 .footer-container {
-    text-align: right;
+    margin-top: 50px;
     padding-right: 50px;
+    padding-left:50px;
 }
 
 .lightbulb {
@@ -106,6 +107,10 @@
     left:1179px;
 }
 
+
+.event-log {
+    font-size: 10pt;
+}
 
 
 
