@@ -6,7 +6,7 @@ var simulationInterval;
 var isSimulationRunning = false;
 
 // CONSTANTS
-var PERIOD_DURATION = 50; // 1 sec
+var PERIOD_DURATION = 180;  // ms
 
 $(function(){
     $('.lightbulb').click(function(target){
@@ -27,13 +27,18 @@ $(function(){
         } else {
             closeDoor(doorIndex);
         }
-
     });
+
+    $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
+    
 });
 
 function logMessage(message, logLevel, timestamp) {
-    var timeString = moment().format('DD.MM.YYYY, h:mm:ss a');
-    $('.event-log').prepend($('<a href="#" class="list-group-item list-group-item">' + timeString + ' - <b>' + message + '</b></a>'))
+    if (logLevel == undefined) {
+        logLevel = '';
+    }
+    var timeString = moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a');
+    $('.event-log').prepend($('<a href="#" class="list-group-item list-group-item' + logLevel + '">' + timeString + ' - <b>' + message + '</b></a>'))
 }
 
 function toggleSimulation() {
@@ -47,17 +52,31 @@ function toggleSimulation() {
 function startSimulation() {
     isSimulationRunning = true;
     simulationInterval = setInterval(function() {
-       // console.log('Minute', minute);
 
         updateDoors();
+
+        // Update Clock Heading
+        $('#clock-heading').text(moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a'));
+
         minute = (minute + 1) % historicData[0].length;
+
     }, PERIOD_DURATION);
+}
+
+function checkDoorAnomaly() {
+    // Check if doors are closed at nighttime
+    var hours = Math.floor(minute / 60) % 24;
+    console.log(hours);
+    if (1 <= hours && hours <= 7) {
+        logMessage('Unusual Door Activity', '-danger');
+    }
 }
 
 function updateDoors() {
     for (var doorIndex = 0; doorIndex < historicData.length; doorIndex++) {
         if (historicData[doorIndex][minute] == 0 && (minute == 0 || historicData[doorIndex][minute - 1] != 0)) {
                 openDoor(doorIndex + 1);
+
         } else if (historicData[doorIndex][minute] == 1 && (minute == 0 || historicData[doorIndex][minute - 1] != 1)) {
                 closeDoor(doorIndex + 1);
         }        
@@ -87,6 +106,8 @@ function turnOffLight(lightIndex) {
 }
 
 function openDoor(doorIndex) {
+    checkDoorAnomaly();
+
     logMessage('Opened Door ' + doorIndex + ".");
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-closed')) {
