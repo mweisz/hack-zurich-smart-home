@@ -25,6 +25,7 @@ var liveLightData = [Array.apply(null, Array(OVERALL_MINUTES)).map(Number.protot
                     Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0)];
 
 var isManualMode = false;
+var isWarningMode = false;
 var simulationInterval;
 var isSimulationRunning = false;
 
@@ -51,6 +52,8 @@ $(function(){
             closeDoor(doorIndex);
         }
     });
+
+    setInterval(checkLightAnomaly, 200);
 
     $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
 
@@ -107,6 +110,7 @@ function checkDoorAnomaly() {
 }
 
 function checkLightAnomaly() {
+    console.log('CKECK')
     // Check if doors are closed at nighttime
     var hours = Math.floor(minute / 60) % 24;
 
@@ -115,10 +119,15 @@ function checkLightAnomaly() {
 
 
     console.log(numberOfLights);
-    if (Math.abs(numberOfLights - historicSumOfLights[minute]) >= 2) {
-        logMessage('Unusual Light Activity', '-danger');
+    if (Math.abs(numberOfLights - historicSumOfLights[minute]) >= 2 && !isWarningMode) {
+        $('#statusLabel').removeClass('label-success').addClass('label-warning');
+        logMessage('Unusual Light Activity', '-warning');
+        isWarningMode = true;
+    } else if (isWarningMode && Math.abs(numberOfLights - historicSumOfLights[minute]) < 2) {
+            $('#statusLabel').removeClass('label-warning').addClass('label-success');
+            logMessage('Light Activity Operating normally', '-success');  
+            isWarningMode = false;
     }
-    // }
 }
 
 function updateDoors() {
@@ -167,6 +176,7 @@ function turnOffLight(lightIndex) {
          liveLightData[lightIndex - 1][i ] = 0;
     }
     logMessage('Turned off Light ' + lightIndex);
+    checkLightAnomaly();
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
 }

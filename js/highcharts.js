@@ -66,7 +66,7 @@ function showLightingChart() {
             },
             series: [{
                 name: 'Normal Usage',
-                data: []
+                data: historicSumOfLights
             },
             {
                 name: 'Current Usage',
