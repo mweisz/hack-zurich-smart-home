@@ -154,8 +154,14 @@
 }
 
 
-
-
+.panel-default > .panel-heading {
+  color: #333;
+  background-color: #000;
+  border-color: #ddd;
+  background-image: none !important;
+      border: 2px solid #dadada;
+    border-radius: 7px;
+}
 
 
 
