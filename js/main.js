@@ -6,7 +6,7 @@ var simulationInterval;
 var isSimulationRunning = false;
 
 // CONSTANTS
-var PERIOD_DURATION = 5; // 1 sec
+var PERIOD_DURATION = 50; // 1 sec
 
 $(function(){
     $('.lightbulb').click(function(target){
