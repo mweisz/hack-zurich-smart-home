@@ -31,6 +31,11 @@ $(function(){
     });
 });
 
+function logMessage(message, logLevel, timestamp) {
+    var timeString = moment().format('DD.MM.YYYY, h:mm:ss a');
+    $('.event-log').prepend($('<a href="#" class="list-group-item list-group-item">' + timeString + ' - <b>' + message + '</b></a>'))
+}
+
 function toggleSimulation() {
     if (isSimulationRunning) {
         stopSimulation();
@@ -70,17 +75,19 @@ function toggleLightBulb(lightIndex) {
 }
 
 function turnOnLight(lightIndex) {
+    logMessage('Turned on Light ' + lightIndex);
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-off').addClass('lightbulb-on');
 }
 
 function turnOffLight(lightIndex) {
+    logMessage('Turned off Light ' + lightIndex);
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
 }
 
 function openDoor(doorIndex) {
-    console.log('Open doors.');
+    logMessage('Opened Door ' + doorIndex + ".");
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-closed')) {
         // Vertical door
@@ -92,7 +99,7 @@ function openDoor(doorIndex) {
 }
 
 function closeDoor(doorIndex) {
-    console.log('Close doors.');
+    logMessage('Closed Door ' + doorIndex + '.');
 
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-open')) { 
