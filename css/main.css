@@ -3,18 +3,20 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
+ body {
+    background-color: #3f4955;
+ }
 
 .groundplan-container {
-    background-image: url("../img/groundplan.png");
+    background-image: url("../img/groundplan_small.png");
     
-    width: 1294px;
-    height: 574px; 
+    width: 1165px;
+    height: 517px; 
     margin:auto;
 }
 
 .footer-container {
-    margin-top: 50px;
+    margin-top: 35px;
     padding-right: 50px;
     padding-left:50px;
 }
@@ -35,76 +37,76 @@
 }
 
 #lightbulb-1 {
-    top:20px;
-    left:835px;
+    top:85px;
+    left:830px;
 }
 
 #lightbulb-2 {
-    top:20px;
-    left:1185px;
+    top:85px;
+    left:1145px;
 }
 
 #lightbulb-3 {
-    top:20px;
-    left:1400px;
+    top:85px;
+    left:1340px;
 }
 
 #lightbulb-4 {
-    top:200px;
-    left:1185px;
+    top:255px;
+    left:1145px;
 }
 
 .overlay-box {
     z-index: 100;
     border: 1px solid grey;
     position: absolute;
-    background-color: lightgrey;
-    opacity: 0.4;
+    background-color: #1daf99;
+    opacity: 0.9;
 }
 
 .vertical-door-closed {
     width: 11px;
-    height:80px;
+    height:75px;
 }
 
 .vertical-door-open {
-    width: 80px;
+    width: 75px;
     height:11px;
 }
 
 .horizontal-door-closed {
-    width: 80px;
+    width: 73px;
     height:11px;
 }
 
 .horizontal-door-open {
     width: 11px;
-    height:80px;
+    height:73px;
 }
 
 #door-1 {
-    top: 280px;
-    left:317px;
+    top: 322px;
+    left:368px;
 }
 
 #door-2 {
-    top: 280px;
-    left:910px;
+    top: 322px;
+    left:903px;
 }
 
 #door-3 {
-    top: 280px;
-    left:1260px;
+    top: 318px;
+    left:1218px;
 }
 
 #door-4 {
-    top: 186px;
-    left:1179px;
+    top: 237px;
+    left:1147px;
 }
 
 #door-5 {
-    top: 443px;
-    left:1179px;
+    top: 468px;
+    left:1146px;
 }
 
 
@@ -115,6 +117,40 @@
 .event-log a {
     padding-top: 3px;
     padding-bottom: 3px;
+}
+
+
+.material-switch > input[type="checkbox"] {
+    display: none;   
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative; 
+    width: 40px;  
+}
+
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 25px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 36px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 36px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+}
 }
 
 

@@ -1,17 +1,38 @@
+// CONSTANTS
+var PERIOD_DURATION = 20;//180;  // ms
+var OVERALL_MINUTES = 2880;
+
 // GLOBALS, Yummy!!!
 var minute = 0; 
-var historicData = [stateTimeline.contact.contact_3,
+var historicDoorData = [stateTimeline.contact.contact_3,
                     stateTimeline.contact.contact_13]; 
 
-var numberOfLights = 0;                    
+var historicLightData = [stateTimeline.light.light_1,
+                        stateTimeline.light.light_2,
+                        stateTimeline.light.light_3,
+                        stateTimeline.light.light_4];
+
+var historicSumOfLights = [Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0)];
+
+for (var i = 0; i < OVERALL_MINUTES; i++) {
+    historicSumOfLights[i] = historicLightData[0][i] + historicLightData[1][i] + historicLightData[2][i] + historicLightData[3][i];
+}
+
+
+var liveLightData = [Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0),
+                    Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0),
+                    Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0),
+                    Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0)];
+
+var isManualMode = false;
+var isWarningMode = false;
 var simulationInterval;
 var isSimulationRunning = false;
 
-// CONSTANTS
-var PERIOD_DURATION = 180;  // ms
 
 $(function(){
     $('.lightbulb').click(function(target){
+        isManualMode = true;
         var lightIndex = parseInt(target.toElement.id.split("\-")[1]);
         var lightbulb = $(target.toElement);
         if (lightbulb.hasClass('lightbulb-on')) {
@@ -22,6 +43,7 @@ $(function(){
     });
 
     $('.overlay-box').click(function(target){
+        isManualMode = true;
         var doorIndex = parseInt(target.toElement.id.split("\-")[1]);
 
         if($(target.toElement).hasClass('vertical-door-closed') || $(target.toElement).hasClass('horizontal-door-closed')){
@@ -30,6 +52,8 @@ $(function(){
             closeDoor(doorIndex);
         }
     });
+
+    setInterval(checkLightAnomaly, 200);
 
     $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
 
@@ -63,12 +87,16 @@ function startSimulation() {
     isSimulationRunning = true;
     simulationInterval = setInterval(function() {
 
-        updateDoors();
+        if(!isManualMode) {
+            updateDoors();
+            updateLights();
+        }
+
 
         // Update Clock Heading
         $('#clock-heading').text(moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a'));
 
-        minute = (minute + 1) % historicData[0].length;
+        minute = (minute + 1) % OVERALL_MINUTES;
 
     }, PERIOD_DURATION);
 }
@@ -82,25 +110,46 @@ function checkDoorAnomaly() {
 }
 
 function checkLightAnomaly() {
+    console.log('CKECK')
     // Check if doors are closed at nighttime
     var hours = Math.floor(minute / 60) % 24;
+
     // if (1 <= hours && hours <= 7) {
-    if (numberOfLights > 3) {
-        logMessage('Unusual Light Activity', '-danger');
+    var numberOfLights = liveLightData[0][minute] + liveLightData[1][minute] + liveLightData[2][minute] + liveLightData[3][minute];
+
+
+    console.log(numberOfLights);
+    if (Math.abs(numberOfLights - historicSumOfLights[minute]) >= 2 && !isWarningMode) {
+        $('#statusLabel').removeClass('label-success').addClass('label-warning');
+        logMessage('Unusual Light Activity', '-warning');
+        isWarningMode = true;
+    } else if (isWarningMode && Math.abs(numberOfLights - historicSumOfLights[minute]) < 2) {
+            $('#statusLabel').removeClass('label-warning').addClass('label-success');
+            logMessage('Light Activity Operating normally', '-success');  
+            isWarningMode = false;
     }
-    // }
 }
 
 function updateDoors() {
-    for (var doorIndex = 0; doorIndex < historicData.length; doorIndex++) {
-        if (historicData[doorIndex][minute] == 0 && (minute == 0 || historicData[doorIndex][minute - 1] != 0)) {
+    for (var doorIndex = 0; doorIndex < historicDoorData.length; doorIndex++) {
+        if (historicDoorData[doorIndex][minute] == 0 && (minute == 0 || historicDoorData[doorIndex][minute - 1] != 0)) {
                 openDoor(doorIndex + 1);
 
-        } else if (historicData[doorIndex][minute] == 1 && (minute == 0 || historicData[doorIndex][minute - 1] != 1)) {
+        } else if (historicDoorData[doorIndex][minute] == 1 && (minute == 0 || historicDoorData[doorIndex][minute - 1] != 1)) {
                 closeDoor(doorIndex + 1);
         }        
     }
+}
 
+function updateLights() {
+    for (var lightIndex = 0; lightIndex < historicLightData.length; lightIndex++) {
+        if (historicLightData[lightIndex][minute] == 0 && (minute == 0 || historicLightData[lightIndex][minute - 1] != 0)) {
+                turnOffLight(lightIndex + 1);
+
+        } else if (historicLightData[lightIndex][minute] == 1 && (minute == 0 || historicLightData[lightIndex][minute - 1] != 1)) {
+                turnOnLight(lightIndex + 1);
+        }        
+    }
 }
 
 function stopSimulation() {
@@ -113,7 +162,9 @@ function toggleLightBulb(lightIndex) {
 }
 
 function turnOnLight(lightIndex) {
-    numberOfLights++;
+    for (var i = minute; i < OVERALL_MINUTES; i++) {
+         liveLightData[lightIndex - 1][i ] = 1;
+    }
     logMessage('Turned on Light ' + lightIndex);
     checkLightAnomaly();
     var lightbulb = $('#lightbulb-' + lightIndex);
@@ -121,8 +172,11 @@ function turnOnLight(lightIndex) {
 }
 
 function turnOffLight(lightIndex) {
-    numberOfLights--;
+    for (var i = minute; i < OVERALL_MINUTES; i++) {
+         liveLightData[lightIndex - 1][i ] = 0;
+    }
     logMessage('Turned off Light ' + lightIndex);
+    checkLightAnomaly();
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
 }

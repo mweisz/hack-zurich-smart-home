@@ -1,38 +1,76 @@
 function showLightingChart() {
+ Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
         $('#container').highcharts({
-        title: {
-            text: 'Lighting',
-            x: -40 //center
-        },
-        xAxis: {
-            // categories: ['0', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            //     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Light Sources'
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second
+                        var series0 = this.series[0];
+                        var series1 = this.series[1];
+                        setInterval(function () {
+                            var x = (new Date()).getTime(), // current time
+                                y = Math.random();
+                            // series.addPoint([x, y], true, true);
+                            series0.setData(historicSumOfLights, true)
+                    
+                            var liveSumOfLights = [Array.apply(null, Array(minute)).map(Number.prototype.valueOf,0)];
+
+                            for (var i = 0; i < minute; i++) {
+                                liveSumOfLights[i] = liveLightData[0][i] + liveLightData[1][i] + liveLightData[2][i] + liveLightData[3][i];
+                            }
+                            series1.setData(liveSumOfLights, true)
+                        }, 1000);
+                    }
+                }
             },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
-        },
-        // tooltip: {
-        //     valueSuffix: '°C'
-        // },
+            title: {
+                text: '# Of Light Sources'
+            },
+            xAxis: {
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
         legend: {
             layout: 'vertical',
             align: 'right',
             verticalAlign: 'middle',
             borderWidth: 0
         },
-        series: [{
-            name: 'Average # of light sources',
-            data: [0, 0, 0, 0, 1, 1, 2, 2, 1, 3, 3, 2, 1, 0, 0, 0]
-        },{
-            name: 'Current # of light sources',
-            data: [0, 0, 0, 0, 1, 1, 3, 4, 4, 4, 4, 4, 2, 1, 0, 0]
-        }]
-    });
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'Normal Usage',
+                data: historicSumOfLights
+            },
+            {
+                name: 'Current Usage',
+                data: []
+            }]
+        });
 }
