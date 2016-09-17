@@ -59,6 +59,7 @@ $(function(){
     setInterval(checkLightAnomaly, 200);
 
     $('.person').hide();
+    $('#person-3').show();
 
     $('#clock-heading').text(moment("2016-05-12T05:00:00").format('DD.MM.YYYY, h:mm:ss a'));
 
@@ -174,7 +175,7 @@ function updateDoors() {
 function updateAvatar() {
     console.log('ACATAR')
     for (var roomIndex = 0; roomIndex < 3; roomIndex++) {
-        if (historicAvatarData[roomIndex][minute] > 0) {
+        if (historicAvatarData[roomIndex][minute] >= 0) {
             console.log('...')
             $('#person-' + (roomIndex + 1)).show();
         } else {
