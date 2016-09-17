@@ -18,6 +18,41 @@
     padding-right: 50px;
 }
 
+.lightbulb {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+}
+
+.lightbulb-on {
+    background-image: url("../img/lightbulb-on.png");
+}
+
+.lightbulb-off {
+    background-image: url("../img/lightbulb-off.png");
+    opacity: 0.2;
+}
+
+#lightbulb-1 {
+    top:20px;
+    left:835px;
+}
+
+#lightbulb-2 {
+    top:20px;
+    left:1185px;
+}
+
+#lightbulb-3 {
+    top:20px;
+    left:1400px;
+}
+
+#lightbulb-4 {
+    top:200px;
+    left:1185px;
+}
+
 .overlay-box {
     z-index: 100;
     border: 1px solid grey;

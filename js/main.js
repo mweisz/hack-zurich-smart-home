@@ -8,6 +8,12 @@ var isSimulationRunning = false;
 // CONSTANTS
 var PERIOD_DURATION = 1000; // 1 sec
 
+$(function(){
+    $('.lightbulb').click(function(target){
+
+    });
+});
+
 function toggleSimulation() {
     if (isSimulationRunning) {
         stopSimulation();
@@ -40,6 +46,20 @@ function updateDoors() {
 function stopSimulation() {
     isSimulationRunning = false;
     clearInterval(simulationInterval);
+}
+
+function toggleLightBulb(lightIndex) {
+
+}
+
+function turnOnLight(lightIndex) {
+    var lightbulb = $('#lightbulb-' + lightIndex);
+    lightbulb.removeClass('lightbulb-off').addClass('lightbulb-on');
+}
+
+function turnOffLight(lightIndex) {
+    var lightbulb = $('#lightbulb-' + lightIndex);
+    lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
 }
 
 function openDoor(doorIndex) {
