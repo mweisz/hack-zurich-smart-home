@@ -15,7 +15,6 @@ window.requestAnimationFrame = window.requestAnimationFrame
 
 function updateclock(){
     // var curdate = minute //new Date()
-    console.log(minute);
     var curMin = minute % 60;
     var curHour = Math.floor(minute / 60) % 12;
 

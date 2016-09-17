@@ -2,11 +2,13 @@
 var minute = 0; 
 var historicData = [stateTimeline.contact.contact_3,
                     stateTimeline.contact.contact_13]; 
+
+var numberOfLights = 0;                    
 var simulationInterval;
 var isSimulationRunning = false;
 
 // CONSTANTS
-var PERIOD_DURATION = 50; // 1 sec
+var PERIOD_DURATION = 180;  // ms
 
 $(function(){
     $('.lightbulb').click(function(target){
@@ -27,13 +29,26 @@ $(function(){
         } else {
             closeDoor(doorIndex);
         }
-
     });
+
+    $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
+
+
 });
 
 function logMessage(message, logLevel, timestamp) {
-    var timeString = moment().format('DD.MM.YYYY, h:mm:ss a');
-    $('.event-log').prepend($('<a href="#" class="list-group-item list-group-item">' + timeString + ' - <b>' + message + '</b></a>'))
+    if (logLevel == undefined) {
+        logLevel = '';
+    }
+    var timeString = moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a');
+    var logEntry = $('<a href="#" class="list-group-item list-group-item' + logLevel + '">' + timeString + ' - <b>' + message + '</b></a>');
+
+    logEntry.click(function(){
+        showLightingChart();
+    });
+
+    $('.event-log').prepend(logEntry);
+
 }
 
 function toggleSimulation() {
@@ -47,17 +62,40 @@ function toggleSimulation() {
 function startSimulation() {
     isSimulationRunning = true;
     simulationInterval = setInterval(function() {
-       // console.log('Minute', minute);
 
         updateDoors();
+
+        // Update Clock Heading
+        $('#clock-heading').text(moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a'));
+
         minute = (minute + 1) % historicData[0].length;
+
     }, PERIOD_DURATION);
+}
+
+function checkDoorAnomaly() {
+    // Check if doors are closed at nighttime
+    var hours = Math.floor(minute / 60) % 24;
+    if (1 <= hours && hours <= 7) {
+        logMessage('Unusual Door Activity', '-danger');
+    }
+}
+
+function checkLightAnomaly() {
+    // Check if doors are closed at nighttime
+    var hours = Math.floor(minute / 60) % 24;
+    // if (1 <= hours && hours <= 7) {
+    if (numberOfLights > 3) {
+        logMessage('Unusual Light Activity', '-danger');
+    }
+    // }
 }
 
 function updateDoors() {
     for (var doorIndex = 0; doorIndex < historicData.length; doorIndex++) {
         if (historicData[doorIndex][minute] == 0 && (minute == 0 || historicData[doorIndex][minute - 1] != 0)) {
                 openDoor(doorIndex + 1);
+
         } else if (historicData[doorIndex][minute] == 1 && (minute == 0 || historicData[doorIndex][minute - 1] != 1)) {
                 closeDoor(doorIndex + 1);
         }        
@@ -75,12 +113,15 @@ function toggleLightBulb(lightIndex) {
 }
 
 function turnOnLight(lightIndex) {
+    numberOfLights++;
     logMessage('Turned on Light ' + lightIndex);
+    checkLightAnomaly();
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-off').addClass('lightbulb-on');
 }
 
 function turnOffLight(lightIndex) {
+    numberOfLights--;
     logMessage('Turned off Light ' + lightIndex);
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
@@ -88,6 +129,8 @@ function turnOffLight(lightIndex) {
 
 function openDoor(doorIndex) {
     logMessage('Opened Door ' + doorIndex + ".");
+    checkDoorAnomaly();
+
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-closed')) {
         // Vertical door
