@@ -75,6 +75,16 @@ function logMessage(message, logLevel, timestamp) {
 
 }
 
+function showNotification(msg, type) {
+    $.notify({
+        // options
+        message: 'Hello World' 
+    },{
+        // settings
+        type: 'danger'
+    });
+}
+
 function toggleSimulation() {
     if (isSimulationRunning) {
         stopSimulation();
