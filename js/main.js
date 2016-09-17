@@ -1,28 +1,46 @@
+// GLOBALS, Yummy!!!
 var minute = 0; 
-var sampleData = [0, 0, 0, 1, 1, 1];
+var sampleData = [[0, 0, 0, 1, 1, 1],
+                  [1, 0, 1, 0, 1, 0]]; 
+var simulationInterval;
+var isSimulationRunning = false;
 
+// CONSTANTS
+var PERIOD_DURATION = 1000; // 1 sec
 
+function toggleSimulation() {
+    if (isSimulationRunning) {
+        stopSimulation();
+    } else {
+        startSimulation();
+    }
+}
 
 function startSimulation() {
-    setInterval(function() {
-        if (sampleData[minute] == 0) {
-            openDoor(1);
-        } else {
-            closeDoor(1);
-        }
+    isSimulationRunning = true;
+    simulationInterval = setInterval(function() {
+        console.log('Minute', minute);
 
-        minute = (minute + 1) % sampleData.length;
-    }, 1000);
+        updateDoors();
+        minute = (minute + 1) % sampleData[0].length;
+    }, PERIOD_DURATION);
+}
+
+function updateDoors() {
+    for (var doorIndex = 0; doorIndex < sampleData.length; doorIndex++) {
+        if (sampleData[doorIndex][minute] == 0 && (minute == 0 || sampleData[doorIndex][minute - 1] != 0)) {
+                openDoor(doorIndex + 1);
+        } else if (sampleData[doorIndex][minute] == 1 && (minute == 0 || sampleData[doorIndex][minute - 1] != 1)) {
+                closeDoor(doorIndex + 1);
+        }        
+    }
+
 }
 
 function stopSimulation() {
-    
+    isSimulationRunning = false;
+    clearInterval(simulationInterval);
 }
-
-
-
-
-
 
 function openDoor(doorIndex) {
     var door = $('#door-' + doorIndex);

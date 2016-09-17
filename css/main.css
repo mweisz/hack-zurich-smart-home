@@ -13,12 +13,17 @@
     margin:auto;
 }
 
+.footer-container {
+    text-align: right;
+    padding-right: 50px;
+}
+
 .overlay-box {
     z-index: 100;
     border: 1px solid grey;
     position: absolute;
     background-color: lightgrey;
-    opacity: 0.2;
+    opacity: 0.4;
 }
 
 .vertical-door-closed {
