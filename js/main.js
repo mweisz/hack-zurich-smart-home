@@ -1,9 +1,9 @@
 // CONSTANTS
-var PERIOD_DURATION = 20;//180;  // ms
+var PERIOD_DURATION = 90;//180;  // ms
 var OVERALL_MINUTES = 2880;
 
 // GLOBALS, Yummy!!!
-var minute = 0; 
+var minute = 300; 
 var historicDoorData = [stateTimeline.contact.contact_3,
                     stateTimeline.contact.contact_13]; 
 
@@ -23,6 +23,9 @@ var liveLightData = [Array.apply(null, Array(OVERALL_MINUTES)).map(Number.protot
                     Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0),
                     Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0),
                     Array.apply(null, Array(OVERALL_MINUTES)).map(Number.prototype.valueOf,0)];
+
+var historicAvatarData = [stateTimeline.movement.movement_14, stateTimeline.movement.movement_6, stateTimeline.movement.movement_15];
+
 
 var isManualMode = false;
 var isWarningMode = false;
@@ -55,7 +58,9 @@ $(function(){
 
     setInterval(checkLightAnomaly, 200);
 
-    $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
+    $('.person').hide();
+
+    $('#clock-heading').text(moment("2016-05-12T05:00:00").format('DD.MM.YYYY, h:mm:ss a'));
 
 
 });
@@ -68,7 +73,11 @@ function logMessage(message, logLevel, timestamp) {
     var logEntry = $('<a href="#" class="list-group-item list-group-item' + logLevel + '">' + timeString + ' - <b>' + message + '</b></a>');
 
     logEntry.click(function(){
-        showLightingChart();
+        if (logLevel == '-warning') {
+            showLightingChart();
+        } else if (logLevel == '-danger')  {
+            showNotification();
+        }
     });
 
     $('.event-log').prepend(logEntry);
@@ -78,9 +87,19 @@ function logMessage(message, logLevel, timestamp) {
 function showNotification(msg, type) {
     $.notify({
         // options
-        message: 'Hello World' 
+            message: 'Suspicious Door Behaviour. Sending Notification...' ,
+            icon: 'glyphicon glyphicon-warning-sign',
+    url: 'https://github.com/mouse0270/bootstrap-notify',
+    target: '_blank'
     },{
+            delay: 15000,
+        timer: 1000,
         // settings
+        allow_dismiss: false,
+        placement: {
+            from: "top",
+            align: "right"
+        },
         type: 'danger'
     });
 }
@@ -100,6 +119,7 @@ function startSimulation() {
         if(!isManualMode) {
             updateDoors();
             updateLights();
+            updateAvatar();
         }
 
 
@@ -148,6 +168,18 @@ function updateDoors() {
         } else if (historicDoorData[doorIndex][minute] == 1 && (minute == 0 || historicDoorData[doorIndex][minute - 1] != 1)) {
                 closeDoor(doorIndex + 1);
         }        
+    }
+}
+
+function updateAvatar() {
+    console.log('ACATAR')
+    for (var roomIndex = 0; roomIndex < 3; roomIndex++) {
+        if (historicAvatarData[roomIndex][minute] > 0) {
+            console.log('...')
+            $('#person-' + (roomIndex + 1)).show();
+        } else {
+            $('#person-' + (roomIndex + 1)).hide();
+        }
     }
 }
 

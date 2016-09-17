@@ -179,15 +179,17 @@
     top: 140px;
     left: 1040px;
 }
-#person-3 {
+/*#person-3 {
     top: 330px;
     left: 1040px;
-}
-#person-4 {
+}*/
+#person-3 {
     top: 250px;
     left: 1290px;
 }
 
 
-
+.alert-danger {
+    font-size: 18pt;
+}
 

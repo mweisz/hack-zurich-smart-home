@@ -49,11 +49,7 @@ function showLightingChart() {
                 }]
             },
             tooltip: {
-                formatter: function () {
-                    return '<b>' + this.series.name + '</b><br/>' +
-                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                        Highcharts.numberFormat(this.y, 2);
-                }
+                enabled: false
             },
         legend: {
             layout: 'vertical',
