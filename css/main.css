@@ -13,6 +13,59 @@
     margin:auto;
 }
 
+.overlay-box {
+    z-index: 100;
+    border: 1px solid grey;
+    position: absolute;
+    background-color: lightgrey;
+    opacity: 0.2;
+}
+
+.vertical-door-closed {
+    width: 11px;
+    height:80px;
+}
+
+.vertical-door-open {
+    width: 80px;
+    height:11px;
+}
+
+.horizontal-door-closed {
+    width: 80px;
+    height:11px;
+}
+
+.horizontal-door-open {
+    width: 11px;
+    height:80px;
+}
+
+#door-1 {
+    top: 280px;
+    left:317px;
+}
+
+#door-2 {
+    top: 280px;
+    left:910px;
+}
+
+#door-3 {
+    top: 280px;
+    left:1260px;
+}
+
+#door-4 {
+    top: 186px;
+    left:1179px;
+}
+
+#door-5 {
+    top: 443px;
+    left:1179px;
+}
+
 
 
 
