@@ -17,6 +17,17 @@
         <link rel="stylesheet" type="text/css" href="css/css3clock.css" />
     </head>
     <body>
+        <nav class="navbar navbar-default" style="border:none;"> 
+          <div class="container-fluid" style="background-color: #283339;">
+            <div class="navbar-header">
+            
+              <a class="navbar-brand" href="#" style="padding:10px;">
+                <img alt="Brand" src="img/home-icon.png">
+              </a>
+              <!-- <span style="color:#e7eef0; font-size: 22pt; margin-top:5px;">Safe Home</span> -->
+            </div>
+          </div>
+        </nav>
 
         <div class="groundplan-container">
             <!-- DOORS -->
@@ -40,7 +51,9 @@
         <!-- Controls -->
         <div class="footer-container">
             <div class="panel panel-default">
-                <div class="panel-heading">Simulation</div>
+                <div class="panel-heading">  <div style=" font-size: 14pt; text-align:right;" id="clock-heading">
+                                
+                            </div></div>
                 <div class="panel-body"> 
                     <div class="row">
                         <div class="col-xs-12 col-md-4">
@@ -49,18 +62,16 @@
                                 <input id="someSwitchOptionSuccess" checked name="someSwitchOption001" type="checkbox"/>
                                 <label id='statusLabel' for="someSwitchOptionSuccess" class="label-success"></label>
                             </div>
-                            <div class="list-group event-log pre-scrollable" style="height:200px; margin-top:10px;">
+                            <div class="list-group event-log pre-scrollable" style="height:150px; margin-top:10px;">
                             </div>
 
 
                         </div>
                         <div class="col-xs-12 col-md-6">
-                            <div id="container" style="min-width: 310px; height: 230px; margin: 0 auto"></div>
+                            <div id="container" style="min-width: 310px; height: 210px; margin: 0 auto"></div>
                         </div>
                         <div class="col-xs-4 col-md-2" style="text-align: center;">
-                            <div style="margin-bottom:10px; font-size: 14pt" id="clock-heading">
-                                
-                            </div>
+
                             <div id="liveclock" class="outer_face" style="margin-left:40px;">
                                 <div class="marker oneseven"></div>
                                 <div class="marker twoeight"></div>
