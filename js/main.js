@@ -2,6 +2,8 @@
 var minute = 0; 
 var historicData = [stateTimeline.contact.contact_3,
                     stateTimeline.contact.contact_13]; 
+
+var numberOfLights = 0;                    
 var simulationInterval;
 var isSimulationRunning = false;
 
@@ -30,7 +32,8 @@ $(function(){
     });
 
     $('#clock-heading').text(moment("2016-05-12T00:00:00").format('DD.MM.YYYY, h:mm:ss a'));
-    
+
+
 });
 
 function logMessage(message, logLevel, timestamp) {
@@ -38,7 +41,14 @@ function logMessage(message, logLevel, timestamp) {
         logLevel = '';
     }
     var timeString = moment("2016-05-12T00:00:00").add(minute, 'minutes').format('DD.MM.YYYY, h:mm:ss a');
-    $('.event-log').prepend($('<a href="#" class="list-group-item list-group-item' + logLevel + '">' + timeString + ' - <b>' + message + '</b></a>'))
+    var logEntry = $('<a href="#" class="list-group-item list-group-item' + logLevel + '">' + timeString + ' - <b>' + message + '</b></a>');
+
+    logEntry.click(function(){
+        showLightingChart();
+    });
+
+    $('.event-log').prepend(logEntry);
+
 }
 
 function toggleSimulation() {
@@ -66,10 +76,19 @@ function startSimulation() {
 function checkDoorAnomaly() {
     // Check if doors are closed at nighttime
     var hours = Math.floor(minute / 60) % 24;
-    console.log(hours);
     if (1 <= hours && hours <= 7) {
         logMessage('Unusual Door Activity', '-danger');
     }
+}
+
+function checkLightAnomaly() {
+    // Check if doors are closed at nighttime
+    var hours = Math.floor(minute / 60) % 24;
+    // if (1 <= hours && hours <= 7) {
+    if (numberOfLights > 3) {
+        logMessage('Unusual Light Activity', '-danger');
+    }
+    // }
 }
 
 function updateDoors() {
@@ -94,21 +113,24 @@ function toggleLightBulb(lightIndex) {
 }
 
 function turnOnLight(lightIndex) {
+    numberOfLights++;
     logMessage('Turned on Light ' + lightIndex);
+    checkLightAnomaly();
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-off').addClass('lightbulb-on');
 }
 
 function turnOffLight(lightIndex) {
+    numberOfLights--;
     logMessage('Turned off Light ' + lightIndex);
     var lightbulb = $('#lightbulb-' + lightIndex);
     lightbulb.removeClass('lightbulb-on').addClass('lightbulb-off');
 }
 
 function openDoor(doorIndex) {
+    logMessage('Opened Door ' + doorIndex + ".");
     checkDoorAnomaly();
 
-    logMessage('Opened Door ' + doorIndex + ".");
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-closed')) {
         // Vertical door
