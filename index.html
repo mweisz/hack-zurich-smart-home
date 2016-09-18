@@ -8,22 +8,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
+        <!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
+        
 
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/css3clock.css" />
+        <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
         <nav class="navbar navbar-default" style="border:none;"> 
           <div class="container-fluid" style="background-color: #283339;">
-            <div class="navbar-header">
-            
+            <div class="navbar-header" style="display:table;">
               <a class="navbar-brand" href="#" style="padding:10px;">
                 <img alt="Brand" src="img/home-icon.png">
               </a>
+                 <span style="color: #94989e; font-size:18pt;  display:table-cell; vertical-align:middle;">Safe Home Dashboard</span>
               <!-- <span style="color:#e7eef0; font-size: 22pt; margin-top:5px;">Safe Home</span> -->
             </div>
           </div>
@@ -42,19 +43,21 @@
             <div class="lightbulb lightbulb-off" id="lightbulb-2"></div>
             <div class="lightbulb lightbulb-off" id="lightbulb-3"></div>
             <div class="lightbulb lightbulb-off" id="lightbulb-4"></div>
+
+            <!-- Person -->
+            <div class="person" id="person-1"></div>
+            <div class="person" id="person-2"></div>
+            <div class="person" id="person-3"></div>
         </div>
-
-
-
 
 
         <!-- Controls -->
         <div class="footer-container">
-            <div class="panel panel-default">
-                <div class="panel-heading">  <div style=" font-size: 14pt; text-align:right;" id="clock-heading">
-                                
-                            </div></div>
-                <div class="panel-body"> 
+            <div class="panel panel-default" style="border:none; border-radius: 7px;">
+                <div class="panel-heading" style="background-color:#26313d; color:white;">  
+                    <div style=" font-size: 14pt; text-align:right;" id="clock-heading"></div>
+                </div>
+                <div class="panel-body" style="background-color: #e9ecf3; border-radius:7px;"> 
                     <div class="row">
                         <div class="col-xs-12 col-md-4">
                             <span style="font-size: 18pt">Overall Status</span>
@@ -94,8 +97,96 @@
                </div>
             </div>
 
+        </div>
 
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="position: absolute; right: 3px; top:3px; background-color: #26313d; border: none">
+            <span class=" glyphicon glyphicon-cog"></span>
+        </button>
 
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">My Sharing Settings</h4>
+              </div>
+              <div class="modal-body">
+                <!-- List group -->
+                <img src="img/swiss-re.png" style="margin-bottom:10px; margin-top:25px;">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <img src="img/runner.png"> Movement
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <img src="img/door.png"> Door Access
+                        
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionInfo"  name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionInfo" class="label-info"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <img src="img/light-bulb.png"> Lights
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionWarning" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionWarning" class="label-warning"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <img src="img/humidity.png"> Water
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionSuccess" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionSuccess" class="label-success"></label>
+                        </div>
+                    </li>
+                </ul>
+
+                <img src="img/joana.png" style="margin-bottom:10px;margin-top:25px;">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <img src="img/runner.png"> Movement
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionPrimary2" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionPrimary2" class="label-primary"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <img src="img/door.png"> Door Access
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionInfo2" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionInfo2" class="label-info"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <img src="img/light-bulb.png"> Lights
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionWarning2" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionWarning2" class="label-warning"></label>
+                        </div>
+                    </li>
+                     <li class="list-group-item">
+                        <img src="img/humidity.png"> Water
+                        <div class="material-switch2 pull-right">
+                            <input id="someSwitchOptionSuccess2" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionSuccess2" class="label-success"></label>
+                        </div>
+                    </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
         </div>
 
 
@@ -110,6 +201,7 @@
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
         <script src="js/highcharts.js"></script>
         <script src="js/clock.js"></script>
+        <script src="js/bootstrap-notify.min.js"></script>
         <script src="js/main.js"></script>
     </body>
 </html>
