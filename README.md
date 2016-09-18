@@ -10,5 +10,5 @@
 
 
 
-### Underlying Data Model
+### Underlying IBM SPSS Data Model based on ARIMA and Simple Seasonal Time Series prediction models
 ![alt tag](http://michael-weisz.de/bak/hackzurich/model.png)
