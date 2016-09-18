@@ -1,5 +1,5 @@
 // CONSTANTS
-var PERIOD_DURATION = 90;//180;  // ms
+var PERIOD_DURATION = 10;//180;  // ms
 var OVERALL_MINUTES = 2880;
 
 // GLOBALS, Yummy!!!
@@ -36,6 +36,7 @@ var isSimulationRunning = false;
 $(function(){
     $('.lightbulb').click(function(target){
         isManualMode = true;
+        $("#modeCheckBox").prop('checked', false);
         var lightIndex = parseInt(target.toElement.id.split("\-")[1]);
         var lightbulb = $(target.toElement);
         if (lightbulb.hasClass('lightbulb-on')) {
@@ -47,6 +48,8 @@ $(function(){
 
     $('.overlay-box').click(function(target){
         isManualMode = true;
+        $("#modeCheckBox").prop('checked', false);
+
         var doorIndex = parseInt(target.toElement.id.split("\-")[1]);
 
         if($(target.toElement).hasClass('vertical-door-closed') || $(target.toElement).hasClass('horizontal-door-closed')){
@@ -59,12 +62,36 @@ $(function(){
     setInterval(checkLightAnomaly, 200);
 
     $('.person').hide();
-    $('#person-3').show();
+    $('#person-2').show();
+
+    $('#modeCheckBox').on("change", function(){
+        if (isManualMode) {
+            isManualMode = false;
+        } else {
+            isManualMode = true;
+        }
+    });
 
     $('#clock-heading').text(moment("2016-05-12T05:00:00").format('DD.MM.YYYY, h:mm:ss a'));
 
 
 });
+
+function makeAPIcall() {
+    $.ajax({
+        url: "http://localhost:3000/score/checkOutlier",
+        type: "POST",
+        data: historicSumOfLights.slice(0, 10),
+        success:function(data, textStatus, jqXHR){
+            console.log("HTTP Request Succeeded: " + jqXHR.status);
+            console.log(data);
+        },
+        error:function(jqXHR, textStatus, errorThrown){
+            console.log("HTTP Request Failed");
+        }
+    });
+
+}
 
 function logMessage(message, logLevel, timestamp) {
     if (logLevel == undefined) {
@@ -141,7 +168,6 @@ function checkDoorAnomaly() {
 }
 
 function checkLightAnomaly() {
-    console.log('CKECK')
     // Check if doors are closed at nighttime
     var hours = Math.floor(minute / 60) % 24;
 
@@ -149,7 +175,6 @@ function checkLightAnomaly() {
     var numberOfLights = liveLightData[0][minute] + liveLightData[1][minute] + liveLightData[2][minute] + liveLightData[3][minute];
 
 
-    console.log(numberOfLights);
     if (Math.abs(numberOfLights - historicSumOfLights[minute]) >= 2 && !isWarningMode) {
         $('#statusLabel').removeClass('label-success').addClass('label-warning');
         logMessage('Unusual Light Activity', '-warning');
@@ -173,10 +198,8 @@ function updateDoors() {
 }
 
 function updateAvatar() {
-    console.log('ACATAR')
     for (var roomIndex = 0; roomIndex < 3; roomIndex++) {
         if (historicAvatarData[roomIndex][minute] >= 0) {
-            console.log('...')
             $('#person-' + (roomIndex + 1)).show();
         } else {
             $('#person-' + (roomIndex + 1)).hide();
@@ -226,7 +249,9 @@ function turnOffLight(lightIndex) {
 
 function openDoor(doorIndex) {
     logMessage('Opened Door ' + doorIndex + ".");
-    checkDoorAnomaly();
+    setTimeout(function(){ checkDoorAnomaly();}, 1200);
+    
+    makeAPIcall();
 
     var door = $('#door-' + doorIndex);
     if (door.hasClass('vertical-door-closed')) {

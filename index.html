@@ -34,8 +34,8 @@
             <!-- DOORS -->
             <div class="overlay-box vertical-door-closed" id="door-1"></div>
             <div class="overlay-box vertical-door-closed" id="door-2"></div>
-            <div class="overlay-box vertical-door-closed" id="door-3"></div>
-            <div class="overlay-box horizontal-door-closed" id="door-4"></div>
+            <div class="overlay-box vertical-door-open" id="door-3"></div>
+            <div class="overlay-box horizontal-door-open" id="door-4"></div>
             <div class="overlay-box horizontal-door-closed" id="door-5"></div>
 
             <!-- LIGHTBULBS -->
@@ -87,8 +87,12 @@
                                 <!-- <div class="hand second"></div> -->
                                 </div>
                             </div>
+
                             <div style="margin-top:15px;">
                                 <input type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-play'></i> Play" data-off="<i class='fa fa-pause'></i> Pause" onchange="toggleSimulation()">
+                                 <div class="material-switch2 pull-right">
+                            </div> <br>
+                             <input style="margin-top:10px;" checked type="checkbox" id="modeCheckBox" name="vehicle" value="Bike" onch> Simulation<br>
                             </div>
                         </div>
                     </div>
@@ -98,6 +102,7 @@
             </div>
 
         </div>
+
 
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="position: absolute; right: 3px; top:3px; background-color: #26313d; border: none">
@@ -143,13 +148,13 @@
                     <li class="list-group-item">
                         <img src="img/humidity.png"> Water
                         <div class="material-switch2 pull-right">
-                            <input id="someSwitchOptionSuccess" checked name="someSwitchOption001" type="checkbox"/>
-                            <label for="someSwitchOptionSuccess" class="label-success"></label>
+                            <input id="someSwitchOptionSuccess3" checked name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionSuccess3" class="label-success"></label>
                         </div>
                     </li>
                 </ul>
 
-                <img src="img/joana.png" style="margin-bottom:10px;margin-top:25px;">
+                <img src="img/joana.png" style="margin-bottom:10px;margin-top:25px;"><a href="#" alt="+4917684862114"><img src="img/smartphone.png" style="margin-left:300px;"></a>
                 <ul class="list-group">
                     <li class="list-group-item">
                         <img src="img/runner.png"> Movement
@@ -183,7 +188,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
               </div>
             </div>
           </div>
