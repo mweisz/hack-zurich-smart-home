@@ -5,7 +5,7 @@ import datetime
 import csv
 import pickle
 
-reparse = True
+reparse = False
 
 start_date = int(time.mktime((2016, 5, 12, 0,0,0,0,0,0)) / 60)
 end_date = int(time.mktime((2016, 5, 18, 23,59,0,0,0,0)) / 60)
@@ -60,7 +60,7 @@ else:
                     state[dir_name][instance_dir][parsed_date - start_date] = int(float(parsed_json["eventData"]))
             # Fill intervals between events
             print("Filling the intervals between events")
-            i = 0
+            minute = 0
             prev_pos = 0
             prev_val = None
             first_val = None
@@ -68,11 +68,11 @@ else:
                 if val is not None:
                     if first_val is None:
                         first_val = val
-                        first_val_pos = i
-                    state[dir_name][instance_dir][prev_pos:i] = [prev_val] * (i - prev_pos)
-                    prev_pos = i
+                        first_val_pos = minute
+                    state[dir_name][instance_dir][prev_pos:minute] = [prev_val] * (minute - prev_pos)
+                    prev_pos = minute
                     prev_val = val
-                i = i + 1
+                minute = minute + 1
             state[dir_name][instance_dir][prev_pos:] = [next_val] * (len(state[dir_name][instance_dir]) - prev_pos)
 
     pickle.dump(state, open("state.p", "wb"))
@@ -88,14 +88,14 @@ state.update({"extra_features":
                    "morning": [0] * simulation_len,
                    "evening": [0] * simulation_len}})
 current_datetime = start_date * 60
-for i in range(simulation_len):
-    current_datetime = current_datetime + 1
+for minute in range(simulation_len):
+    current_datetime = current_datetime + 60
     if datetime.datetime.fromtimestamp(current_datetime).isoweekday() in range(1, 6):
-        state["extra_features"]["workday"][i] = 1
+        state["extra_features"]["workday"][minute] = 1
     if datetime.datetime.fromtimestamp(current_datetime).time() < datetime.time(12):
-        state["extra_features"]["morning"][i] = 1
+        state["extra_features"]["morning"][minute] = 1
     if datetime.datetime.fromtimestamp(current_datetime).time() >= datetime.time(18):
-        state["extra_features"]["evening"][i] = 1
+        state["extra_features"]["evening"][minute] = 1
 
 # JSON (minutes)
 with open("js/state_timeline.json", "w") as json_timeline:
@@ -107,42 +107,44 @@ print("Written to", "js/state_timeline.json")
 state_prep = {}
 for instance in list(state["contact"].keys()):
     state_prep[instance + "_freq"] = [0] * int(simulation_len / 60 + 1)
+    state_prep["workday"] = [0] * int(simulation_len / 60 + 1)
+    state_prep["morning"] = [0] * int(simulation_len / 60 + 1)
+    state_prep["evening"] = [0] * int(simulation_len / 60 + 1)
     changes = 0
-    j = 0
-    for i in range(simulation_len - 1):
-        if state["contact"][instance][i] != state["contact"][instance][i+1]:
+    hour = 0
+    for minute in range(simulation_len - 1):
+        if state["contact"][instance][minute] != state["contact"][instance][minute+1]:
             changes = changes + 1
-        if i % 60 == 0:
-            state_prep[instance + "_freq"][j] = changes
-            changes = 0
-            j = j + 1
+        if minute % 60 == 0:
+            state_prep[instance + "_freq"][hour] = changes
+            state_prep["workday"][hour] = \
+                state["extra_features"]["workday"][minute]
+            state_prep["morning"][hour] = \
+                state["extra_features"]["morning"][minute]
+            state_prep["evening"][hour] = \
+                state["extra_features"]["evening"][minute]
 
-print(state_prep)
+            changes = 0
+            hour = hour + 1
 
 # CSV (in hours)
 my_dict = {"test": 1, "testing": 2}
-with open("csv/state_timeline.csv", "w") as csv_timeline:
+with open("csv/state_timeline.csv", "w", newline="") as csv_timeline:
     w = csv.writer(csv_timeline)
     row = []
     # These two arrays are for preserving the column order (array.keys() elements are in random order)
-    sensor_keys = []
-    instance_keys = []
-    for sensor in list(state.keys()):
-        sensor_keys.append(sensor)
-        instance_keys.append([])
-        for instance in list(state[sensor].keys()):
-            row.append(instance)
-            instance_keys[-1].append(instance)
-    print(row)
+    instance_keys = ["contact_9_freq", "contact_11_freq", "contact_13_freq", "workday",
+                     "contact_3_freq", "evening", "morning"]
+
+    for instance in instance_keys:
+        row.append(instance)
+    print(",".join(row))
     w.writerow(row)
 
-    for i in range(simulation_len):
+    for hour in range(int(simulation_len / 60)):
         row = []
-        sensor_i = 0
-        for sensor in sensor_keys:
-            for instance in instance_keys[sensor_i]:
-                row.append(str(state[sensor][instance][i]))
-            sensor_i = sensor_i + 1
+        for instance in instance_keys:
+            row.append(str(state_prep[instance][hour]))
 
         w.writerow(row)
 print("Written to", "csv/state_timeline.csv")
