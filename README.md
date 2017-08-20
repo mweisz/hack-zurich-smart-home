@@ -4,11 +4,11 @@
 *Based on IBM Bluemix, IBM SPSS, IBM Predictive analytics*
 
 ### Overall System
-![alt tag](http://michael-weisz.de/bak/hackzurich/overall.png)
+![alt tag](http://old.michael-weisz.de/bak/hackzurich/overall.png)
 
 
 ### Sharing Settings
-![alt tag](http://michael-weisz.de/bak/hackzurich/sharing.png)
+![alt tag](http://old.michael-weisz.de/bak/hackzurich/sharing.png)
 
 
 
